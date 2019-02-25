@@ -1,0 +1,19 @@
+{
+  "name": "koa-mysql",
+  "version": "1.0.0",
+  "description": "koa-mysql",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node app.js"
+  },
+  "author": "gys",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.7.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-logger": "^3.2.0",
+    "koa-onerror": "^4.1.0",
+    "koa-router": "^7.4.0",
+    "mysql": "^2.16.0"
+  }
+}
