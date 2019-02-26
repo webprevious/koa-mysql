@@ -7,26 +7,22 @@ const logger = require('koa-logger')
 
 // 路由引入
 const users = require('./routes/user')
+const upyun = require('./routes/upyun')
 
 // 错误注册
 onerror(app)
 
-// middlewares
+// post请求解析body中间价
 app.use(bodyparser({
   enableTypes:['json', 'form', 'text']
 }))
-app.use(logger())
 
-// logger
-app.use(async (ctx, next) => {
-  const start = new Date()
-  await next()
-  const ms = new Date() - start
-  console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
-})
+// 日志中间件
+app.use(logger())
 
 // routes注册
 app.use(users.routes(), users.allowedMethods())
+app.use(upyun.routes(), upyun.allowedMethods())
 
 // 错误处理逻辑
 app.on('error', (err, ctx) => {
