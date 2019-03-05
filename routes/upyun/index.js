@@ -19,29 +19,32 @@ function hmacsha1(secret, value) {
     return crypto.createHmac('sha1', secret).update(value, 'utf-8').digest().toString('base64')
 }
 
-let date = new Date().toGMTString()
-let key = 'upyun'
-let secret = '12345678.'
-let method = 'POST'
-let uri = '/shopdev'
-let expiration = Math.ceil((+new Date() + 1800000) / 1000)
-
-let obj = {
-  "bucket": "shopdev",
-  "save-key": "{filename}{.suffix}",
-  "expiration": expiration,
-  "date": date
+// 计算出秘要
+function getKey () {
+  let date = new Date().toGMTString()
+  let key = 'upyun'
+  let secret = '12345678.'
+  let method = 'POST'
+  let uri = '/shopdev'
+  let expiration = Math.ceil((+new Date() + 1800000) / 1000)
+  let obj = {
+    "bucket": "shopdev",
+    "save-key": "{filename}{.suffix}",
+    "expiration": expiration,
+    "date": date
+  }
+  let policy = new Buffer(JSON.stringify(obj)).toString('base64')
+  let authorization = sign(key, MD5(secret), method, uri, date, policy)
+  return {
+    policy,
+    authorization
+  }
 }
-let policy = new Buffer(JSON.stringify(obj)).toString('base64')
-let authorization = sign(key, MD5(secret), method, uri, date, policy)
 
 router.get('/getUpyun', async (ctx, next) => {
   ctx.body = {
     code: 0,
-    data: {
-      authorization,
-      policy
-    }
+    data: getKey()
   }
 })
 
